@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function LazyMan(name) {
+            var o = new Object();
+            var sleepFirstTime = 0;
+            var sleepTime = 0;
+            setTimeout(() => {
+                setTimeout(() => {
+                    console.log('Hi This is ' + name);
+                }, sleepFirstTime);
+            }, 0);
+            o.sleep = function(time) {
+                setTimeout(() => {
+                    setTimeout(() => {
+                        sleepTime = time * 1000;
+                        setTimeout(() => {
+                            console.log(`Wake up after ${time}s`);
+                        }, sleepTime);
+                    }, sleepFirstTime);
+                }, 0)
+                return this;
+            }
+            o.sleepFirst = function(time) {
+                sleepFirstTime = time * 1000;
+                setTimeout(() => {
+                    console.log(`Wake up after ${time}s`);
+                }, sleepFirstTime);
+                return this;
+            }
+            o.eat = function(food) {
+                setTimeout(() => {
+                    setTimeout(() => {
+                        setTimeout(() => {
+                            console.log('Eat ' + food);
+                        },  sleepTime);
+                    }, sleepFirstTime);
+                }, 0);
+                return this;
+            }
+            return o;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Man() {}
+
+        Man.prototype = {
+            constructor: Man,
+            eat: function(something) {
+                manActions.add('eat', something);
+                return this;
+            },
+            sleep: function(time) {
+                manActions.add('sleep', time);
+                return this;
+            },
+            sleepFirst: function(time) {
+                manActions.add('sleepFirst', time);
+                return this;
+            }
+        }
+
+        var manName = function(name) {
+            return function() {
+                testLog(`Hi This is ${name}`);
+                manActions.next();
+            }
+        }
+
+        var sleep = function(time) {
+            return function() {
+                setTimeout(function() {
+                    testLog(`Wake up after ${time}s`);
+                    manActions.next();
+                }, time * 1000);
+            }
+        }
+
+        var eat = function(something) {
+            return function() {
+                testLog(`Eat ${something} ~`);
+                manActions.next();
+            }
+        }
+
+        function testLog(test) {
+            console.log(test);
+        }
+
+        var manActions = {
+            handlerList: [],
+            add: function(type, param) {
+                switch(type) {
+                    case 'eat': this.handlerList.push(eat(param));
+                    break;
+                    case 'sleep': this.handlerList.push(sleep(param));
+                    break;
+                    case 'sleepFirst': this.handlerList.unshift(sleep(param));
+                    break;
+                    case 'name': this.handlerList.push(manName(param));
+                    break;
+                }
+            },
+            next: function() {
+                if(this.handlerList.length > 0) {
+                    var handler = this.handlerList.shift();
+                    handler();
+                }
+            }
+        };
+
+        var LazyMan = function(name) {
+            manActions.add('name', name);
+            setTimeout(() => { manActions.next() }, 0);
+            return new Man();
+        }
+    </script>
+</body>
+</html>
